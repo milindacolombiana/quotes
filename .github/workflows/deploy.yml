@@ -1,0 +1,43 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  LAMBDA_NAME: ${{ vars.LAMBDA_NAME }}
+
+jobs:
+  deploy_lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+
+      - name: Install requirements
+        run: pip install -r requirements.txt -t lib
+
+      - name: Zip depedencies
+        run: |
+          cd lib/
+          zip -r9 ../deploy.zip .
+
+      - name: Added code to zip
+        run: |
+          zip -g deploy.zip handler.py
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Upload code to AWS
+        run: |
+          aws lambda update-function-code --function-name  ${{ env.LAMBDA_NAME }} --zip-file fileb://deploy.zip
+          echo "Done!"
