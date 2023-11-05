@@ -25,6 +25,3 @@ def main_handler(event, context):
         "statusCode": requests.codes.get("ok"),
         "body": res.json()
     }
-
-
-(main_handler(None, None))
