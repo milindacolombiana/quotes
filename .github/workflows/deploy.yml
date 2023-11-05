@@ -27,7 +27,7 @@ jobs:
         run: pip install -r requirements.txt -t lib
 
       - name: Execute tests
-        run:  coverage run -m unittest
+        run:  python -m unittest
 
       - name: Zip depedencies
         run: |
