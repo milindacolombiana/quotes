@@ -24,13 +24,14 @@ jobs:
           python-version: 3.x
 
       - name: Install requirements
-        run: pip install -r requirements.txt -t lib
+        run: pip install -r requirements.txt
 
       - name: Execute tests
         run:  python -m unittest
 
       - name: Zip depedencies
         run: |
+          pip install -r requirements.txt -t lib
           cd lib/
           zip -r9 ../deploy.zip .
 
