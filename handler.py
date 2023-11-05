@@ -1,12 +1,12 @@
 import logging
 import requests
-
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-API_URL = "https://api.quotable.io/quotes/random"
+API_URL = os.getenv("API_URL")
 
 def main_handler(event, context):
     res = requests.get(API_URL)
