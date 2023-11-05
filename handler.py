@@ -9,6 +9,8 @@ logger.setLevel(logging.INFO)
 API_URL = os.getenv("API_URL")
 
 def main_handler(event, context):
+    logger.info("event: %s", str(event))
+
     res = requests.get(API_URL)
 
     logger.info("url: %s, status code: %d", API_URL, res.status_code)
