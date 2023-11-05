@@ -1,12 +1,20 @@
+import logging
 import requests
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 API_URL = "https://api.quotable.io/quotes/random"
 
 def main_handler(event, context):
     res = requests.get(API_URL)
 
+    logger.info("url: %s, status code: %d", API_URL, res.status_code)
+
     if res.status_code != requests.codes.get("ok"):
-        print(res.json())
+        logger.error("there was en error in the request, body: %s", res.json())
 
         return {
             "statusCode": requests.codes.get("server_error"),
@@ -17,3 +25,6 @@ def main_handler(event, context):
         "statusCode": requests.codes.get("ok"),
         "body": res.json()
     }
+
+
+(main_handler(None, None))
